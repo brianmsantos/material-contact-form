@@ -3,7 +3,9 @@ import {
   FormControl,
   InputLabel, 
   Input, 
+  TextField,
   Button, 
+  TextArea
 } from "@material-ui/core";
 
 export class ContactForm extends Component {
@@ -32,21 +34,35 @@ export class ContactForm extends Component {
       <form style={{ width: "50%" }}>
           <h1>Contact Form</h1>
 
-          <FormControl margin="normal" fullWidth>
-            <InputLabel htmlFor="name">Name</InputLabel>
-            <Input id="name" type="text" />
-          </FormControl>
-
-          <FormControl margin="normal" fullWidth>
-            <InputLabel htmlFor="email">Email</InputLabel>
-            <Input id="email" type="email" />
-          </FormControl>
-
-          <FormControl margin="normal" fullWidth>
-            <InputLabel htmlFor="email">Message</InputLabel>
-            <Input id="email" multiline rows={10} />
-          </FormControl>
-
+          <TextField
+            id="outlined-name"
+            label="Name"
+            margin="normal"
+            variant="outlined"
+          />
+          <br/ >
+          <TextField
+            id="outlined-email-input"
+            label="Email"
+            type="email"
+            name="email"
+            autoComplete="email"
+            margin="normal"
+            variant="outlined"
+          />
+          <br/ >
+          <TextField
+            id="outlined-multiline-flexible"
+            label="Message"
+            multiline
+            fullWidth
+            rowsMax="10"
+            margin="normal"
+            variant="outlined"
+          />
+        
+          <br />
+          <br />
           <Button variant="contained" color="primary" size="medium">
             Send
           </Button>
