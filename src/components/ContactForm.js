@@ -1,71 +1,75 @@
 import React, { Component } from 'react';
 import {
-  TextField,
   Button, 
 } from "@material-ui/core";
+import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
 export class ContactForm extends Component {
   state = {
     name: "",
-    nameError: "",
+    // nameError: "",
     email: "",
-    emailError: "",
+    // emailError: "",
     message: "",
-    messageError: "",
+    // messageError: "",
   };
 
-  change = e => {
-    this.setState({
-      [e.target.name]: e.target.value
+  componentDidMount() {
+    // custom rule will have name 'isName'
+    ValidatorForm.addValidationRule('isName', (name) => {
+      if (name.length < 2) {
+          return false;
+      }
+      return true;
     });
-  };
 
-  validate = () => {
-   let isError = false;
-   const errors ={};
+    ValidatorForm.addValidationRule('isMessage', (message) => {
+      if (message.length < 10) {
+          return false;
+      }
+      return true;
+    });
+  }
 
-    if(this.state.name.length < 1){
-      isError = true;
-      errors.name = "Please enter your name";
-    }
+  componentWillUnmount() {
+    // remove rule when it is not needed
+    ValidatorForm.removeValidationRule('isName');
+    ValidatorForm.removeValidationRule('isMessage');
+  }
 
-    if(this.state.email.indexOf("@") === -1){
-      isError = true;
-      errors.email = "Please enter a valid email";
-    }
+  handleChangeName = (event) => {
+    const name = event.target.value;
+    this.setState({ name });
+  }
 
-    if(this.state.message.length < 10){
-      isError = true;
-      errors.message = "Message must be at least 10 characters long";
-    }
-    
-    if(isError) {
-      this.setState({
-        ...this.state,
-        ...errors
-      })
-    }
-    return isError;
+  handleChangeEmail = (event) => {
+    const email = event.target.value;
+    this.setState({ email });
+  }
+
+  handleChangeMessage = (event) => {
+    const message = event.target.value;
+    this.setState({ message });
   }
 
   onSubmit = e => {
     e.preventDefault();
-    const err = this.validate();
-    if(!err){
       this.props.onSubmit(this.state)
-      //clears form 
       this.setState({
         name: "",
-        nameError: "",
         email: "",
-        emailError: "",
         message: "",
-        messageError: "",
     });
     } 
-  }
-
+  
   render() {
+    const { 
+      name,
+      email,
+      message
+    } = this.state;
+
+    
     return (
       <div
         style={{
@@ -75,54 +79,44 @@ export class ContactForm extends Component {
           padding: 20
         }}
       >
-      <form style={{ width: "50%" }}>
+      <ValidatorForm style={{ width: "50%" }} ref="form"
+      onSubmit={this.handleSubmit}
+      onError={errors => console.log(errors)}>
           <h1>Contact Form</h1>
 
-          <TextField
-            required
-            id="filled-uncontrolled"
+          <TextValidator
             label="Name"
+            onChange={this.handleChangeName}
             name="name"
-            margin="normal"
-            variant="filled"
-            value={this.state.name}
-            onChange={e => this.change(e)}
-            errorText={this.state.nameError}
+            value={name}
+            validators={['required', 'isName']}
+            errorMessages={['this field is required', 'Please enter your name.']}
           />
-          <br/ >
-          <TextField
-            required
-            id="filled-uncontrolled"
+          <br/>
+          <TextValidator
             label="Email"
+            onChange={this.handleChangeEmail}
             name="email"
-            margin="normal"
-            variant="filled"
-            value={this.state.email}
-            onChange={e => this.change(e)}
-            errorText={this.state.emailError}
+            value={email}
+            validators={['required', 'isEmail']}
+            errorMessages={['this field is required', 'Email is not valid']}
           />
           <br/ >
-          <TextField
-            required
-            id="filled-uncontrolled"
+          <TextValidator
             label="Message"
-            name="message"
-            margin="normal"
-            variant="filled"
-            multiline
-            rows='10'
-            fullWidth
-            value={this.state.message}
-            onChange={e => this.change(e)}
-            errorText={this.state.messageError}
+            onChange={this.handleChangeMessage}
+            name="Message"
+            value={message}
+            validators={['required', 'isMessage']}
+            errorMessages={['this field is required', 'Please enter a message.']}
           />
-        
-          <br />
-          <br />
+          <br/>
+          <br/>
+          
           <Button onClick={e => this.onSubmit(e)} variant="contained" color="primary" size="medium">
             Submit
           </Button>
-        </form>
+        </ValidatorForm>
       </div>
 
     
