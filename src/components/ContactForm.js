@@ -7,15 +7,11 @@ import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 export class ContactForm extends Component {
   state = {
     name: "",
-    // nameError: "",
     email: "",
-    // emailError: "",
     message: "",
-    // messageError: "",
   };
 
   componentDidMount() {
-    // custom rule will have name 'isName'
     ValidatorForm.addValidationRule('isName', (name) => {
       if (name.length < 2) {
           return false;
@@ -86,13 +82,16 @@ export class ContactForm extends Component {
 
           <TextValidator
             label="Name"
+            
             onChange={this.handleChangeName}
             name="name"
             value={name}
             validators={['required', 'isName']}
             errorMessages={['this field is required', 'Please enter your name.']}
+            variant="filled"
           />
           <br/>
+          <br/ >
           <TextValidator
             label="Email"
             onChange={this.handleChangeEmail}
@@ -100,15 +99,22 @@ export class ContactForm extends Component {
             value={email}
             validators={['required', 'isEmail']}
             errorMessages={['this field is required', 'Email is not valid']}
+            variant="filled"
           />
+          <br/ >
           <br/ >
           <TextValidator
             label="Message"
+            multiline
+            rowsMax="4"
             onChange={this.handleChangeMessage}
             name="Message"
             value={message}
             validators={['required', 'isMessage']}
             errorMessages={['this field is required', 'Please enter a message.']}
+            variant="filled"
+            fullWidth
+            
           />
           <br/>
           <br/>
